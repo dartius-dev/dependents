@@ -46,6 +46,7 @@ import 'package:flutter/widgets.dart';
 /// 
 class DependentBuilder<T> extends DependencyWidget<T> {
   final Widget? Function(BuildContext context, Widget? child) builder;
+  final bool buildOnDependencyOnly;
 
   const DependentBuilder({
     super.key, 
@@ -53,7 +54,8 @@ class DependentBuilder<T> extends DependencyWidget<T> {
     super.listenableList,
     required super.dependency,
     required this.builder,
-    super.child
+    this.buildOnDependencyOnly = false,
+    super.child,
   });
 
   /// Returns the current dependency value from the nearest ancestor [DependentBuilder].
@@ -82,7 +84,7 @@ class _DependentBuilderState<T> extends DependencyState<T, DependentBuilder<T>> 
   void didUpdateWidget(covariant DependentBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.child!=oldWidget.child) {
+    if (widget.child!=oldWidget.child || !widget.buildOnDependencyOnly) {
       builtWidget = null;
     } 
   }
@@ -158,23 +160,21 @@ abstract class DependencyWidget<T> extends StatefulWidget {
   final List<Listenable>? listenableList;
   final DependencyRecognizer<T> dependency;
   final Widget? child;
-  // final Widget? Function(BuildContext context, Widget? child) builder;
 
   const DependencyWidget({
     super.key, 
     this.listenable,
     this.listenableList,
     required this.dependency,
-    // required this.builder,
     this.child
   }) : assert(listenableList==null || listenable==null, 'Either listenable or listenableList can be provided, not both.');
 
 }
+
 ///
 ///
 ///
 abstract class DependencyState<T, W extends DependencyWidget<T>> extends State<W>{
-
 
   T? get dependency => _dependency;
   T? _dependency;
@@ -219,6 +219,7 @@ abstract class DependencyState<T, W extends DependencyWidget<T>> extends State<W
     updateState(forceBuild: false);
   }
 
+  @protected
   void updateState({bool forceBuild=true}) {
     if (widget.dependency(context) case final T object when !match(dependency,object)) {
       updateDependency(object);
@@ -227,7 +228,7 @@ abstract class DependencyState<T, W extends DependencyWidget<T>> extends State<W
   }
 
   
-  static bool Function(Object?, Object?) match = defaultMatchFunction;
+  bool Function(Object?, Object?) get match => defaultMatchFunction;
 
   static bool defaultMatchFunction(Object? a, Object? b) 
     => a.runtimeType==b.runtimeType && switch(a) {

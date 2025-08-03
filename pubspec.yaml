@@ -1,10 +1,19 @@
 name: dependents
-description: "Flutter widgets for building and reacting to changes in dependencies, such as inherited widgets or listenable objects."
-version: 0.0.1
-homepage:
+description: "Flutter widgets for reactive UI and state management: rebuild or trigger actions on dependency changes."
+version: 0.1.0
+homepage: https://github.com/dartius-dev/dependents
+repository: https://github.com/dartius-dev/dependents
+issue_tracker: https://github.com/dartius-dev/dependents/issues
+
+topics:
+  - reactive
+  - builder
+  - listener
+  - state-management
+  - dependency
 
 environment:
-  sdk: '^3.0.3'
+  sdk: '>=3.0.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:

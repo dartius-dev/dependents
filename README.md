@@ -12,19 +12,36 @@ and the Flutter guide for
 -->
 
 
-Dependents is a Flutter package that provides widgets for building and reacting to changes in dependencies, such as inherited widgets or listenable objects, making it easier to manage and respond to dynamic data in the widget tree.
 
+# Dependents
+
+`dependents` is a Flutter package that simplifies building reactive UIs by providing widgets for managing and responding to changes in dependencies, such as inherited widgets, ValueNotifier, or any Listenable. It helps you avoid boilerplate, reduce coupling, and keep your widget tree clean and maintainable.
+
+## Why use Dependents?
+
+Flutter's widget tree is powerful, but handling dynamic dependencies and rebuilding widgets efficiently can be challenging. Typical problems include:
+
+- **Manual state management**: Tracking dependencies and updating widgets manually leads to verbose and error-prone code.
+- **InheritedWidget limitations**: Accessing and reacting to inherited values often requires custom logic and can be hard to scale.
+- **Listenable/ValueNotifier boilerplate**: Listening to changes and rebuilding widgets usually involves repetitive code.
+- **Unintended rebuilds**: Widgets may rebuild unnecessarily, impacting performance.
+
+`dependents` solves these problems by:
+
+- Automatically rebuilding widgets only when relevant dependencies change.
+- Providing a unified API for both inherited widgets and listenable objects.
+- Allowing you to react to dependency changes with custom callbacks (side effects).
+- Making dependency access and propagation simple and type-safe.
 
 ## Features
 
-
-- Build widgets that automatically rebuild when a dependency changes (e.g., inherited widgets, ValueNotifier, or any Listenable).
-- React to dependency changes with custom callbacks.
-- Easily access the current dependency value in the widget tree.
-- Compose with other widgets and state management solutions.
+- **Automatic rebuilds**: Widgets update only when their dependencies change.
+- **Unified dependency management**: Works with inherited widgets, ValueNotifier, and any Listenable.
+- **Custom listeners**: React to changes with side effects, not just rebuilds.
+- **Type-safe dependency access**: Easily get the current value anywhere in the widget subtree.
+- **Composable and lightweight**: Integrates with other state management solutions and fits any architecture.
 
 ## Getting started
-
 
 Add the following to your `pubspec.yaml`:
 
@@ -41,20 +58,26 @@ import 'package:dependents/dependents.dart';
 
 ## Usage
 
-
-### Example: Rebuild on Theme Change
+### Rebuild on InheritedWidget Special Property Change
 
 ```dart
 DependentBuilder<Brightness>(
   dependency: (context) => Theme.of(context).colorScheme.brightness,
-  builder: (context, _) => Text("${DependentBuilder.dependencyOf<Brightness>(context)}"),
+  builder: (context, _) {
+    final brightness = DependentBuilder.dependencyOf<Brightness>(context);
+    return Text("$brightness"),
 )
 ```
 
-### Example: Rebuild on Special Property change 
+In this example, the builder will only rebuild when the specific property `colorScheme.brightness` of the theme changes, not on every theme update or unrelated widget change.
+
+> **Note:** The value returned from the `dependency` handler can be accessed inside the `builder` using `DependentBuilder.dependencyOf<T>(context)`. This allows you to retrieve the current dependency value anywhere within the builder, ensuring type safety and convenience.
+
+
+### Rebuild on Listenable Special Property Change
 
 ```dart
-final userValueNotifier = ValueNotifier<User>(User(name: 'Alice', age: 22));
+final userValueNotifier = ValueNotifier<User>(User(name: 'Dep', age: 22));
 
 DependentBuilder<String>(
   listenable: userValueNotifier,
@@ -63,7 +86,61 @@ DependentBuilder<String>(
 )
 ```
 
-### Example: Use DependencyListener
+You can track changes to a specific property (e.g., 'name') rather than the whole object.
+
+The builder will only rebuild when 'userValueNotifier.value.name' changes, not when other properties change.
+
+
+### Rebuild on Expression depending on InheritedWidget
+
+```dart
+DependentBuilder<bool>(
+  dependency: (context) => Theme.of(context).colorScheme.onPrimary.computeLuminance() > 0.5,
+  builder: (context, _) {
+    final light = DependentBuilder.dependencyOf<bool>(context);
+    return Text(light ? "LIGHT" : "DARK");
+  },
+)
+```
+
+The `dependency` function can return any computed value, not just objects or direct properties from dependencies. This allows you to derive and react to complex conditions or calculations based on multiple sources, making your widgets more flexible and expressive.
+
+### Combined Listenable and Inherited Dependencies
+
+```dart
+final userNameNotifier = ValueNotifier<String>('Dep');
+
+DependentBuilder<(bool, String)>(
+  listenable: userNameNotifier,
+  dependency: (context) {
+    final isLight = Theme.of(context).colorScheme.brightness == Brightness.light;
+    final name = userNameNotifier.value;
+    return (isLight, name);
+  },
+  builder: (context, _) {
+    final (isLight, name) = DependentBuilder.dependencyOf<(bool, String)>(context);
+    return Text('Good ${isLight ? 'morning' :'evening'}, $name!');
+  },
+)
+```
+
+
+This widget will rebuild and update the greeting whenever the theme brightness or the user's name changes, demonstrating how to combine inherited and listenable dependencies.
+
+> **Tip:** If you need to track multiple listenable dependencies (such as several ValueNotifiers), you can use the `listenableList` property:
+
+```dart
+DependentBuilder<String>(
+  listenableList: [notifier1, notifier2],
+  dependency: (context) => computeValue(notifier1.value, notifier2.value),
+  builder: (context, _) {
+    final computedValue = DependentBuilder.dependencyOf<String>(context);
+    return Text("$computedValue"),
+  }
+)
+```
+
+### React to Dependency Changes with Side Effects
 
 ```dart
 DependencyListener<String>(
@@ -73,13 +150,29 @@ DependencyListener<String>(
   child: Container(),
 )
 ```
+With `DependencyListener`, you can react to dependency changes and trigger side effects (such as logging, analytics, or navigation) without rebuilding the widget itself. This is useful for handling events or actions that should not affect the UI layout.
 
-### Example: React on Brightness Change
+## Typical use cases
 
-```dart
-DependentBuilder<bool>(
-  dependency: (context) => Theme.of(context).colorScheme.onPrimary.computeLuminance() > 0.5,
-  listener: (light) => print(light ? "LIGHT" : "DARK"),
-)
-```
+- **Theme and localization**: Automatically update widgets when theme or locale changes.
+- **User/session data**: React to changes in user profile, authentication state, or settings.
+- **Custom inherited models**: Simplify access and updates for custom inherited widgets.
+- **Form and input state**: Rebuild or react to changes in form fields or validation state.
+
+## Strengths
+
+- **Minimal boilerplate**: Write less code to achieve robust reactivity.
+- **Performance**: Only affected widgets rebuild, reducing unnecessary work.
+- **Flexibility**: Works with any Listenable, ValueNotifier, or inherited widget.
+- **Side effects**: Easily trigger actions (logging, analytics, etc.) on dependency changes.
+- **Type safety**: Dependency values are strongly typed and easy to access.
+
+## Additional information
+
+See the `example` folder to explore practical usage patterns and integration strategies. 
+
+* [Try the live demo here.](https://dartius-dev.github.io/dependents/).
+* [Example’s source code](https://github.com/dartius-dev/dependents/blob/main/example/lib/main.dart)
+
+> Issues and suggestions are welcome!
 
