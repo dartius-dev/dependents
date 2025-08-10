@@ -14,6 +14,9 @@ and the Flutter guide for
 
 
 # Dependents
+![pub version](https://img.shields.io/pub/v/dependents)
+![pub points](https://img.shields.io/pub/points/dependents)
+[![live demo](./example/livedemo.svg)](https://dartius-dev.github.io/dependents/)
 
 `dependents` is a Flutter package that simplifies building reactive UIs by providing widgets for managing and responding to changes in dependencies, such as inherited widgets, ValueNotifier, or any Listenable. It helps you avoid boilerplate, reduce coupling, and keep your widget tree clean and maintainable.
 
@@ -130,11 +133,11 @@ This widget will rebuild and update the greeting whenever the theme brightness o
 > **Tip:** If you need to track multiple listenable dependencies (such as several ValueNotifiers), you can use the `listenableList` property:
 
 ```dart
-DependentBuilder<String>(
+DependentBuilder(
   listenableList: [notifier1, notifier2],
   dependency: (context) => computeValue(notifier1.value, notifier2.value),
   builder: (context, _) {
-    final computedValue = DependentBuilder.dependencyOf<String>(context);
+    final computedValue = DependentBuilder.dependencyOf(context);
     return Text("$computedValue"),
   }
 )
@@ -144,13 +147,14 @@ DependentBuilder<String>(
 
 ```dart
 DependencyListener<String>(
-  listenable: userValueNotifier,
-  dependency: (context) => userValueNotifier.value.name,
-  listener: (name) => print('User name changed: $name'),
+  dependency: (context) => Theme.of(context).colorScheme.brightness == Brightness.light;,
+  listener: (light) => print('Good ${light ? 'morning' :'evening'}!'),
   child: Container(),
 )
 ```
 With `DependencyListener`, you can react to dependency changes and trigger side effects (such as logging, analytics, or navigation) without rebuilding the widget itself. This is useful for handling events or actions that should not affect the UI layout.
+
+> `listenable` and `listenableList` are also available for handling complex dependencies.
 
 ## Typical use cases
 
@@ -169,10 +173,10 @@ With `DependencyListener`, you can react to dependency changes and trigger side 
 
 ## Additional information
 
-See the `example` folder to explore practical usage patterns and integration strategies. 
+See the `/example` folder to explore practical usage patterns and integration strategies. 
 
 * [Try the live demo here.](https://dartius-dev.github.io/dependents/).
 * [Example’s source code](https://github.com/dartius-dev/dependents/blob/main/example/lib/main.dart)
 
-> Issues and suggestions are welcome!
+Issues and suggestions are welcome!
 
