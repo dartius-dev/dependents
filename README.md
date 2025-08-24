@@ -17,10 +17,36 @@ and the Flutter guide for
 ![pub version](https://img.shields.io/pub/v/dependents)
 ![pub points](https://img.shields.io/pub/points/dependents)
 [![live demo](./example/livedemo.svg)](https://dartius-dev.github.io/dependents/)
+[![example](./example/example.svg)](https://github.com/dartius-dev/dependents/blob/main/example/lib/main.dart)
 
 `dependents` is a Flutter package that simplifies building reactive UIs by providing widgets for managing and responding to changes in dependencies, such as inherited widgets, ValueNotifier, or any Listenable. It helps you avoid boilerplate, reduce coupling, and keep your widget tree clean and maintainable.
 
 ## Why use Dependents?
+
+```dart
+final messageNotifier = ValueNotifier<String>('Hello!');
+
+DependentBuilder<(String, bool)>(
+  listenable: messageNotifier,
+  dependency: (context) {
+    MediaQuery.maybeViewInsetsOf(context); // just listens for viewInsets changes
+    return (messageNotifier.value, MediaQuery.sizeOf(context).width < 300);
+  },
+  builder: (context, _) {
+    final (message, isSmall) = DependentBuilder.dependencyOf<(String, bool)>(context);
+    return Text(message, softWrap: isSmall);
+  },
+)
+```
+
+This example demonstrates how `DependentBuilder` can efficiently handle multiple dependencies at once. The `Text` widget rebuilds only when any of the following change:
+* MediaQuery viewInsets,
+* the message value,
+* or the screen width crossing the 300-pixel threshold.
+
+By tracking several dependencies together, you ensure that your UI updates only when truly relevant changes occur, minimizing unnecessary rebuilds and improving performance.
+
+> This approach minimizes unnecessary rebuilds and improves performance compared to traditional listeners.
 
 Flutter's widget tree is powerful, but handling dynamic dependencies and rebuilding widgets efficiently can be challenging. Typical problems include:
 
