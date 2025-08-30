@@ -1,11 +1,5 @@
-## 0.1.3
+## 0.1.1 - 0.1.4
 - Updated README.md
-
-## 0.1.2
-- Updated README.md
-
-## 0.1.1
-- Updated documentation.
 
 ## 0.1.0
 - Updated documentation and usage examples.

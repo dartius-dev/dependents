@@ -1,6 +1,6 @@
 name: dependents
 description: "Flutter widgets for reactive UI and state management: rebuild or trigger actions on dependency changes."
-version: 0.1.3
+version: 0.1.4
 homepage: https://github.com/dartius-dev/dependents
 repository: https://github.com/dartius-dev/dependents
 issue_tracker: https://github.com/dartius-dev/dependents/issues

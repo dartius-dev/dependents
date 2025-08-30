@@ -15,7 +15,6 @@ and the Flutter guide for
 
 # Dependents
 ![pub version](https://img.shields.io/pub/v/dependents)
-![pub points](https://img.shields.io/pub/points/dependents)
 [![live demo](https://github.com/dartius-dev/dependents/raw/main/example/livedemo.svg)](https://dartius-dev.github.io/dependents/)
 [![example](https://github.com/dartius-dev/dependents/raw/main/example/example.svg)](https://github.com/dartius-dev/dependents/blob/main/example/lib/main.dart)
 
@@ -29,9 +28,9 @@ final messageNotifier = ValueNotifier<String>('Hello!');
 DependentBuilder<(String, bool)>(
   listenable: messageNotifier,
   dependency: (context) {
-    MediaQuery.maybeViewInsetsOf(context); // just listens for viewInsets changes
+    final enclose = MediaQuery.maybeViewInsetsOf(context).bottom > 0
     return (
-      messageNotifier.value, 
+      enclose ? "[ ${messageNotifier.value} ]" : messageNotifier.value, 
       MediaQuery.sizeOf(context).width < 300
     );
   },
@@ -41,11 +40,17 @@ DependentBuilder<(String, bool)>(
   },
 )
 ```
+This example demonstrates how `DependentBuilder` efficiently manages multiple dependencies.
 
-This example demonstrates how `DependentBuilder` can efficiently handle multiple dependencies at once. The `Text` widget rebuilds only when any of the following change:
-* MediaQuery viewInsets,
+The `dependency` function is triggered whenever any of the following change:
+* `messageNotifier.value`
+* `MediaQuery.viewInsets`
+* `MediaQuery.size`
+
+The `builder` rebuilds the `Text` widget only when the dependency tuple `(message, isSmall)` changes:
 * the message value,
-* or the screen width crossing the 300-pixel threshold.
+* the zero/non-zero state of `MediaQuery.viewInsets.bottom`,
+* or when the screen width crosses the 300-pixel threshold.
 
 By tracking several dependencies together, you ensure that your UI updates only when truly relevant changes occur, minimizing unnecessary rebuilds and improving performance.
 
