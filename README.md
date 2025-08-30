@@ -16,8 +16,8 @@ and the Flutter guide for
 # Dependents
 ![pub version](https://img.shields.io/pub/v/dependents)
 ![pub points](https://img.shields.io/pub/points/dependents)
-[![live demo](./example/livedemo.svg)](https://dartius-dev.github.io/dependents/)
-[![example](./example/example.svg)](https://github.com/dartius-dev/dependents/blob/main/example/lib/main.dart)
+[![live demo](https://github.com/dartius-dev/dependents/raw/main/example/livedemo.svg)](https://dartius-dev.github.io/dependents/)
+[![example](https://github.com/dartius-dev/dependents/raw/main/example/example.svg)](https://github.com/dartius-dev/dependents/blob/main/example/lib/main.dart)
 
 `dependents` is a Flutter package that simplifies building reactive UIs by providing widgets for managing and responding to changes in dependencies, such as inherited widgets, ValueNotifier, or any Listenable. It helps you avoid boilerplate, reduce coupling, and keep your widget tree clean and maintainable.
 
@@ -30,7 +30,10 @@ DependentBuilder<(String, bool)>(
   listenable: messageNotifier,
   dependency: (context) {
     MediaQuery.maybeViewInsetsOf(context); // just listens for viewInsets changes
-    return (messageNotifier.value, MediaQuery.sizeOf(context).width < 300);
+    return (
+      messageNotifier.value, 
+      MediaQuery.sizeOf(context).width < 300
+    );
   },
   builder: (context, _) {
     final (message, isSmall) = DependentBuilder.dependencyOf<(String, bool)>(context);
@@ -115,9 +118,9 @@ DependentBuilder<String>(
 )
 ```
 
-You can track changes to a specific property (e.g., 'name') rather than the whole object.
+You can track changes to a specific property (e.g., `name`) rather than the whole object.
 
-The builder will only rebuild when 'userValueNotifier.value.name' changes, not when other properties change.
+The builder will only rebuild when `userValueNotifier.value.name` changes, not when other properties change.
 
 
 ### Rebuild on Expression depending on InheritedWidget
@@ -206,3 +209,4 @@ See the `/example` folder to explore practical usage patterns and integration st
 
 Issues and suggestions are welcome!
 
+## li

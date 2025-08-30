@@ -296,11 +296,11 @@ class _ExampleScreenState extends State<ExampleScreen> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: TextButton(
-                  onPressed: () => launchUrl(Uri.parse("https://pub.dev/packages/dependents")),
-                  child: Text.rich(TextSpan(text: '', children: [
-                    TextSpan(text: 'dependents', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    const TextSpan(text: ' on pub.dev'),
-                  ])),
+                    onPressed: () => launchUrl(Uri.parse("https://pub.dev/packages/dependents")),
+                    child: Text.rich(TextSpan(text: '', children: [
+                      TextSpan(text: 'dependents', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      const TextSpan(text: ' on pub.dev'),
+                    ])),
                   ),
                 ),
               ],
