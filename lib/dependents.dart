@@ -4,4 +4,6 @@
 /// 
 library;
 
-export './src/dependents.dart';
+export 'src/dependency_widget.dart';
+export 'src/dependency_listener.dart';
+export 'src/dependent_builder.dart';

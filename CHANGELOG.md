@@ -1,3 +1,7 @@
+## 0.2.0
+- Changed 
+  - In `DependencyState`, use `buildContent` instead of `build` for overloaded classes to implement custom functionality.
+
 ## 0.1.1 - 0.1.4
 - Updated README.md
 

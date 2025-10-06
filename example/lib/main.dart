@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dependents/dependents.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:dependents/dependents.dart';
 
 void main() => runApp(const App());
 
