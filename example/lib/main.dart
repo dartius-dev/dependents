@@ -103,7 +103,7 @@ class _ExampleScreenState extends State<ExampleScreen> {
                             return (isLight, name);
                           },
                           builder: (context, _) {
-                            final tuple = DependentBuilder.dependencyOf<(bool, String)>(context);
+                            final tuple = DependentBuilder.maybeDependencyOf<(bool, String)>(context);
                             final isLight = tuple?.$1 ?? false;
                             final name = tuple?.$2 ?? '';
                             return Text('Good ${isLight ? 'morning' : 'evening'}, $name!', 

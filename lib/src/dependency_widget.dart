@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-typedef DependencyRecognizer<T>=T? Function(BuildContext context);
+typedef DependencyRecognizer<T>=T Function(BuildContext context);
 
 ///
 ///

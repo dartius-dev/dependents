@@ -1,3 +1,7 @@
+## 0.2.1
+- Changed 
+  - DependentBuilder.dependencyOf, DependentBuilder.maybeDependencyOf, DependencyRecognizer<T>
+
 ## 0.2.0
 - Changed 
   - In `DependencyState`, use `buildContent` instead of `build` for overloaded classes to implement custom functionality.
