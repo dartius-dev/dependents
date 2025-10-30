@@ -1,3 +1,7 @@
+## 0.2.2
+- Fixed 
+  - DependentBuilder.dependencyOf - type cast fix 
+
 ## 0.2.1
 - Changed 
   - DependentBuilder.dependencyOf, DependentBuilder.maybeDependencyOf, DependencyRecognizer<T>

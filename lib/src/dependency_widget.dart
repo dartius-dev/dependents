@@ -79,7 +79,7 @@ abstract class DependencyState<T, W extends DependencyWidget<T>> extends State<W
   @override
   @mustCallSuper
   Widget build(BuildContext context) {
-    if (widget.dependency(context) case final T object when !match(dependency,object)) {
+    if (widget.dependency(context) case final object when !match(dependency,object)) {
       updateDependency(object);
     }
     return buildContent(context);

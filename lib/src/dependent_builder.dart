@@ -57,7 +57,7 @@ class DependentBuilder<T> extends DependencyWidget<T> {
   });
 
   /// Returns the current dependency value from the nearest ancestor [DependentBuilder].
-  static T dependencyOf<T>(BuildContext context) => maybeDependencyOf<T>(context)!;
+  static T dependencyOf<T>(BuildContext context) => maybeDependencyOf<T>(context) as T;
 
   static T? maybeDependencyOf<T>(BuildContext context) {
     final state = switch(context) {
